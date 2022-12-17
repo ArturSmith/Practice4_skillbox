@@ -27,7 +27,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   Map<String, dynamic> data = {
     'My pictures': [
       'https://picsum.photos/1200/501',
@@ -52,27 +51,45 @@ class _MyHomePageState extends State<MyHomePage> {
       'https://picsum.photos/1200/518',
       'https://picsum.photos/1200/519',
       'https://picsum.photos/1200/520',
-    ]
+    ],
+    'Family': [
+      'https://picsum.photos/1200/511',
+      'https://picsum.photos/1200/512',
+      'https://picsum.photos/1200/513',
+      'https://picsum.photos/1200/514',
+      'https://picsum.photos/1200/515',
+      'https://picsum.photos/1200/516',
+      'https://picsum.photos/1200/517',
+      'https://picsum.photos/1200/518',
+      'https://picsum.photos/1200/519',
+      'https://picsum.photos/1200/520',
+    ],
   };
-
-  // ignore: non_constant_identifier_names
-  List<List<Widget>> ListOfWidgets() {
-    List<List<Widget>> mainList = [];
-    List<Widget> firstList = [];
-    List<Widget> secondList = [];
-
-    for (var element in data.values.first) {
-      firstList.add(Imagewidget(src: element));
+ 
+// Create tabs for bottom property of AppBar, number of tabs depends on number of entries of "data" collection. 
+  List<Widget> listOfTabs() {
+    List<Widget> listOfTabs = [];
+    for (var element in data.entries) {
+      listOfTabs.add(
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(element.key.toString()),
+        ),
+      );
     }
+    return listOfTabs;
+  }
 
-    for (var element in data.values.last) {
-      secondList.add(Imagewidget(src: element));
+// Create list of widgets "MylistView". Number of widgets depends on number of entries of Map that reported to this method. 
+  List<Widget> listOfListsOfListView(Map<String, dynamic> data) {
+    List<Widget> finalList = [];
+
+    for (var dynamics in data.values) {
+      finalList.add(
+        MylistView(listOfSrc: dynamics),
+      );
     }
-
-    mainList.add(firstList);
-    mainList.add(secondList);
-
-    return mainList;
+    return finalList;
   }
 
   @override
@@ -83,38 +100,41 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: const Text('MY MEMORIES'),
           centerTitle: true,
-          bottom: TabBar(tabs: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(data.keys.first.toString()),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(data.keys.last.toString()),
-            ),
-          ]),
+          bottom: TabBar(tabs: listOfTabs()),
         ),
-        body: TabBarView(children: [
-          ListView(children: ListOfWidgets()[0]),
-          ListView(children: ListOfWidgets()[1]),
-        ]),
+        body: TabBarView(children: listOfListsOfListView(data)),
       ),
     );
   }
 }
 
 class Imagewidget extends StatelessWidget {
-   Imagewidget({super.key, required this.src});
+  const Imagewidget({super.key, required this.src});
 
-  String src;
+  final String src;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only( bottom: 10),
+        padding: const EdgeInsets.only(bottom: 10),
         child: Image.network(src),
       ),
     );
+  }
+}
+
+// ignore: camel_case_types
+class MylistView extends StatelessWidget {
+  const MylistView({super.key, required this.listOfSrc});
+  final List<String> listOfSrc;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: listOfSrc.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Imagewidget(src: listOfSrc[index]);
+        });
   }
 }
