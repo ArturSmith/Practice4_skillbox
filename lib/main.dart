@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,6 +17,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MyHomePage(),
+      //const MyHomePage(),
     );
   }
 }
@@ -65,8 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
       'https://picsum.photos/1200/520',
     ],
   };
- 
-// Create tabs for bottom property of AppBar, number of tabs depends on number of entries of "data" collection. 
+
+// Create tabs for bottom property of AppBar, number of tabs depends on number of entries of "data" collection.
   List<Widget> listOfTabs() {
     List<Widget> listOfTabs = [];
     for (var element in data.entries) {
@@ -80,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return listOfTabs;
   }
 
-// Create list of widgets "MylistView". Number of widgets depends on number of entries of Map that reported to this method. 
+// Create list of widgets "MylistView". Number of widgets depends on number of entries of Map that reported to this method.
   List<Widget> listOfListsOfListView(Map<String, dynamic> data) {
     List<Widget> finalList = [];
 
@@ -108,33 +111,57 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Imagewidget extends StatelessWidget {
+class Imagewidget extends StatefulWidget {
   const Imagewidget({super.key, required this.src});
 
   final String src;
 
   @override
+  State<Imagewidget> createState() => _ImagewidgetState();
+}
+
+class _ImagewidgetState extends State<Imagewidget>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Image.network(src),
+      child: Image.network(widget.src),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
+// ignore: camel_case_types
+class MylistView extends StatefulWidget {
+  const MylistView({super.key, required this.listOfSrc});
+  final List<String> listOfSrc;
+
+  @override
+  State<MylistView> createState() => _MylistViewState();
+}
+
+class _MylistViewState extends State<MylistView> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey,
+      child: ListView.separated(
+        addAutomaticKeepAlives: false,
+        physics: const BouncingScrollPhysics(),
+        itemCount: widget.listOfSrc.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Imagewidget(src: widget.listOfSrc[index]);
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(
+            color: Colors.white,
+            height: 10,
+          );
+        },
       ),
     );
   }
 }
 
-// ignore: camel_case_types
-class MylistView extends StatelessWidget {
-  const MylistView({super.key, required this.listOfSrc});
-  final List<String> listOfSrc;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: listOfSrc.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Imagewidget(src: listOfSrc[index]);
-        });
-  }
-}
