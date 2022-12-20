@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,15 +8,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: const MyHomePage(),
-      //const MyHomePage(),
-    );
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: const MyHomePage());
   }
 }
 
@@ -84,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 // Create list of widgets "MylistView". Number of widgets depends on number of entries of Map that reported to this method.
-  List<Widget> listOfListsOfListView(Map<String, dynamic> data) {
+  List<Widget> listOfListView(Map<String, dynamic> data) {
     List<Widget> finalList = [];
 
     for (var dynamics in data.values) {
@@ -99,33 +95,42 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: data.length,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('MY MEMORIES'),
-          centerTitle: true,
-          bottom: TabBar(tabs: listOfTabs()),
-        ),
-        body: TabBarView(children: listOfListsOfListView(data)),
-      ),
+      child: Builder(builder: (context) {
+        return SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              actions: [],
+              title: const Text('My images'),
+              bottom: TabBar(tabs: listOfTabs()),
+              elevation: 30,
+            ),
+            floatingActionButton: const FloatingButton(),
+            //const FloatingButton(),
+            body: Center(
+              child: Container(
+                color: Colors.white,
+                child: TabBarView(
+                  children: listOfListView(data),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
     );
   }
 }
 
-class Imagewidget extends StatefulWidget {
+class Imagewidget extends StatelessWidget {
   const Imagewidget({super.key, required this.src});
 
   final String src;
 
   @override
-  State<Imagewidget> createState() => _ImagewidgetState();
-}
-
-class _ImagewidgetState extends State<Imagewidget>
-    with AutomaticKeepAliveClientMixin {
-  @override
   Widget build(BuildContext context) {
     return Center(
-      child: Image.network(widget.src),
+      child: FadeInImage.assetNetwork(
+          placeholder: 'assets/Spinner-1.3s-197px.gif', image: src),
     );
   }
 
@@ -143,25 +148,56 @@ class MylistView extends StatefulWidget {
 }
 
 class _MylistViewState extends State<MylistView> {
+  final List<Widget> listImages = [];
+  @override
+  void initState() {
+    super.initState();
+
+    for (var element in widget.listOfSrc) {
+      listImages.add(Imagewidget(src: element));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey,
-      child: ListView.separated(
-        addAutomaticKeepAlives: false,
-        physics: const BouncingScrollPhysics(),
+      child: ListView.builder(
         itemCount: widget.listOfSrc.length,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: ((context, index) {
           return Imagewidget(src: widget.listOfSrc[index]);
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return Container(
-            color: Colors.white,
-            height: 10,
-          );
-        },
+        }),
       ),
     );
   }
 }
 
+class FloatingButton extends StatefulWidget {
+  const FloatingButton({super.key});
+
+  @override
+  State<FloatingButton> createState() => _FloatingButtonState();
+}
+
+class _FloatingButtonState extends State<FloatingButton> {
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      child: const Icon(Icons.add),
+      onPressed: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Add new image'),
+          content: const Text('Input src of image, for example: https://...'),
+          actions: <Widget>[
+            const TextField(),
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
