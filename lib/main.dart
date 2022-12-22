@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
               elevation: 30,
             ),
             floatingActionButton: const FloatingButton(),
-            //const FloatingButton(),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             body: Center(
               child: Container(
                 color: Colors.white,
@@ -139,25 +139,18 @@ class ImageWidget extends StatelessWidget {
 }
 
 // ignore: camel_case_types
-class MyListView extends StatefulWidget {
+class MyListView extends StatelessWidget {
   const MyListView({super.key, required this.listOfSrc});
   final List<String> listOfSrc;
-
-  @override
-  State<MyListView> createState() => _MyListViewState();
-}
-
-class _MyListViewState extends State<MyListView> {
- 
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       child: ListView.builder(
-        itemCount: widget.listOfSrc.length,
+        itemCount: listOfSrc.length,
         itemBuilder: ((context, index) {
-          return ImageWidget(src: widget.listOfSrc[index]);
+          return ImageWidget(src: listOfSrc[index]);
         }),
       ),
     );
