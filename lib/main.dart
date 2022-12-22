@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     for (var dynamics in data.values) {
       finalList.add(
-        MylistView(listOfSrc: dynamics),
+        MyListView(listOfSrc: dynamics),
       );
     }
     return finalList;
@@ -121,8 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Imagewidget extends StatelessWidget {
-  const Imagewidget({super.key, required this.src});
+class ImageWidget extends StatelessWidget {
+  const ImageWidget({super.key, required this.src});
 
   final String src;
 
@@ -139,33 +139,25 @@ class Imagewidget extends StatelessWidget {
 }
 
 // ignore: camel_case_types
-class MylistView extends StatefulWidget {
-  const MylistView({super.key, required this.listOfSrc});
+class MyListView extends StatefulWidget {
+  const MyListView({super.key, required this.listOfSrc});
   final List<String> listOfSrc;
 
   @override
-  State<MylistView> createState() => _MylistViewState();
+  State<MyListView> createState() => _MyListViewState();
 }
 
-class _MylistViewState extends State<MylistView> {
-  final List<Widget> listImages = [];
-  @override
-  void initState() {
-    super.initState();
-
-    for (var element in widget.listOfSrc) {
-      listImages.add(Imagewidget(src: element));
-    }
-  }
+class _MyListViewState extends State<MyListView> {
+ 
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
+      color: Colors.white,
       child: ListView.builder(
         itemCount: widget.listOfSrc.length,
         itemBuilder: ((context, index) {
-          return Imagewidget(src: widget.listOfSrc[index]);
+          return ImageWidget(src: widget.listOfSrc[index]);
         }),
       ),
     );
@@ -201,3 +193,4 @@ class _FloatingButtonState extends State<FloatingButton> {
     );
   }
 }
+
