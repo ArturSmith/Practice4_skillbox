@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -65,23 +67,21 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
   };
 
-// Create tabs for bottom property of AppBar, number of tabs depends on number of entries of "data" collection.
-  List<Widget> listOfTabs() {
-    List<Widget> listOfTabs = [];
+  List<Widget> tabsGenerator() {
+    final List<Widget> listOfTabs = [];
     for (var element in data.entries) {
       listOfTabs.add(
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Text(element.key.toString()),
+          child: Text(element.key.toString(), style: const TextStyle(color: Colors.blue),),
         ),
       );
     }
     return listOfTabs;
   }
 
-// Create list of widgets "MylistView". Number of widgets depends on number of entries of Map that reported to this method.
-  List<Widget> listOfListView(Map<String, dynamic> data) {
-    List<Widget> finalList = [];
+  List<Widget> listViewGenerator(Map<String, dynamic> data) {
+    final List<Widget> finalList = [];
 
     for (var dynamics in data.values) {
       finalList.add(
@@ -99,18 +99,16 @@ class _MyHomePageState extends State<MyHomePage> {
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(
-              actions: [],
-              title: const Text('My images'),
-              bottom: TabBar(tabs: listOfTabs()),
-              elevation: 30,
+              backgroundColor: Colors.white,
+              title: const Text('My images', style: TextStyle(color: Colors.blue),),
+              bottom: TabBar(tabs: tabsGenerator()),
+              elevation: 50,
             ),
-            floatingActionButton: const FloatingButton(),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             body: Center(
               child: Container(
                 color: Colors.white,
                 child: TabBarView(
-                  children: listOfListView(data),
+                  children: listViewGenerator(data),
                 ),
               ),
             ),
@@ -133,9 +131,6 @@ class ImageWidget extends StatelessWidget {
           placeholder: 'assets/Spinner-1.3s-197px.gif', image: src),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 // ignore: camel_case_types
@@ -156,34 +151,3 @@ class MyListView extends StatelessWidget {
     );
   }
 }
-
-class FloatingButton extends StatefulWidget {
-  const FloatingButton({super.key});
-
-  @override
-  State<FloatingButton> createState() => _FloatingButtonState();
-}
-
-class _FloatingButtonState extends State<FloatingButton> {
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: const Icon(Icons.add),
-      onPressed: () => showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Add new image'),
-          content: const Text('Input src of image, for example: https://...'),
-          actions: <Widget>[
-            const TextField(),
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
